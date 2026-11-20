@@ -2,12 +2,12 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>배추 아케이드 - 무료 웹게임 포털</title>
-  <meta name="description" content="설치 없이 바로 즐기는 무료 웹게임 천국! 협곡 미니 대전 5:5, 메이플 미니 월드를 지금 플레이하세요.">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Malgun Gothic', sans-serif; }
-    body { background: linear-gradient(135deg, #090d16 0%, #1e1b4b 100%); color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Malgun Gothic', sans-serif; user-select: none; }
+    body { background: linear-gradient(135deg, #090d16 0%, #1e1b4b 100%); color: #f8fafc; min-height: 100vh; overflow-x: hidden; }
+    #lobby { display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
     header { text-align: center; padding: 60px 20px 40px; }
     header h1 { font-size: 2.6rem; color: #38bdf8; text-shadow: 0 0 20px rgba(56, 189, 248, 0.5); margin-bottom: 12px; }
     header p { color: #94a3b8; font-size: 1.1rem; }
@@ -17,76 +17,42 @@
     .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; margin-bottom: 14px; width: fit-content; }
     .b-moba { background: #1d4ed8; color: #dbeafe; }
     .b-rpg { background: #ea580c; color: #ffedd5; }
-    .b-soon { background: #334155; color: #94a3b8; }
     .card h2 { font-size: 1.5rem; margin-bottom: 10px; color: #fff; }
     .card p { color: #cbd5e1; font-size: 0.95rem; line-height: 1.5; margin-bottom: 24px; }
-    .btn { display: block; width: 100%; border: none; cursor: pointer; text-align: center; background: #38bdf8; color: #090d16; font-weight: bold; padding: 14px; border-radius: 10px; font-size: 1.05rem; transition: 0.2s; }
+    .btn { display: block; width: 100%; border: none; cursor: pointer; text-align: center; background: #38bdf8; color: #090d16; font-weight: bold; padding: 14px; border-radius: 10px; font-size: 1.05rem; }
     .btn:hover { background: #7dd3fc; }
-    .btn.disabled { background: #475569; color: #94a3b8; cursor: not-allowed; }
-    footer { margin-top: auto; padding: 30px; color: #64748b; font-size: 0.9rem; }
-    #player { display: none; position: fixed; inset: 0; background: #000; z-index: 9999; flex-direction: column; }
-    #bar { height: 44px; background: #0f172a; border-bottom: 1px solid #334155; display: flex; align-items: center; justify-content: space-between; padding: 0 18px; }
-    #bar span { font-weight: bold; color: #38bdf8; font-size: 0.95rem; }
-    #closeBtn { background: #ef4444; color: #fff; border: none; padding: 6px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-    #closeBtn:hover { background: #dc2626; }
-    iframe { flex: 1; width: 100%; border: none; background: #000; }
+    #gameWrap { display: none; position: fixed; inset: 0; background: #000; z-index: 9999; }
+    #backBtn { position: fixed; top: 12px; left: 12px; z-index: 10000; background: rgba(239,68,68,.9); color: #fff; border: 2px solid #fff; padding: 8px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    canvas { display: block; width: 100vw; height: 100vh; }
   </style>
 </head>
-<body>
-  <header>
-    <h1>🎮 배추 아케이드 (BAECHU ARCADE)</h1>
-    <p>다운로드 없이 브라우저에서 1초 만에 바로 즐기는 무료 웹게임 포털</p>
-  </header>
-
-  <main class="grid">
-    <div class="card">
-      <div>
-        <span class="badge b-moba">5:5 팀전 MOBA</span>
-        <h2>협곡 미니 대전 5:5</h2>
-        <p>이즈리얼, 아리, 티모 등 9종의 챔피언을 선택해 라인을 밀고 적 넥서스를 파괴하세요! (PC & 모바일 지원)</p>
+<body oncontextmenu="return false">
+  <div id="lobby">
+    <header>
+      <h1>🎮 배추 아케이드 (BAECHU ARCADE)</h1>
+      <p>차단 없이 사이트 안에서 0.1초 만에 바로 실행되는 무료 웹게임</p>
+    </header>
+    <main class="grid">
+      <div class="card">
+        <div><span class="badge b-moba">5:5 팀전 MOBA</span><h2>협곡 미니 대전 5:5</h2><p>이즈리얼, 아리, 티모 등 9종의 챔피언을 선택해 적 넥서스를 파괴하세요!</p></div>
+        <button class="btn" onclick="launch(1)">▶ 지금 플레이하기</button>
       </div>
-      <button class="btn" onclick="play('협곡 미니 대전 5:5', 'https://github.io')">▶ 지금 플레이하기</button>
-    </div>
-
-    <div class="card">
-      <div>
-        <span class="badge b-rpg">2D 횡스크롤 RPG</span>
-        <h2>메이플 미니 월드</h2>
-        <p>전사·마법사·궁수로 전직해 슬라임과 머쉬맘을 사냥하고, 메소를 모아 무기를 강화해 보세요!</p>
+      <div class="card">
+        <div><span class="badge b-rpg">2D 횡스크롤 RPG</span><h2>메이플 미니 월드</h2><p>전사·마법사·궁수로 전직해 슬라임과 머쉬맘을 사냥하고 무기를 강화하세요!</p></div>
+        <button class="btn" onclick="launch(2)">▶ 지금 플레이하기</button>
       </div>
-      <button class="btn" onclick="play('메이플 미니 월드', 'https://github.io')">▶ 지금 플레이하기</button>
-    </div>
-
-    <div class="card">
-      <div>
-        <span class="badge b-soon">COMING SOON</span>
-        <h2>신작 게임 준비 중</h2>
-        <p>곧 새로운 장르의 중독성 넘치는 웹게임이 추가될 예정입니다. 기대해 주세요!</p>
-      </div>
-      <button class="btn disabled">업데이트 예정</button>
-    </div>
-  </main>
-
-  <div id="player">
-    <div id="bar">
-      <span id="gTitle">게임 실행 중</span>
-      <button id="closeBtn" onclick="closeGame()">✖ 로비로 돌아가기</button>
-    </div>
-    <iframe id="gFrame" src=""></iframe>
+    </main>
   </div>
-
-  <footer>© 2026 BaeChu Arcade. All games playable free in browser.</footer>
-
-  <script>
-    function play(title, url) {
-      document.getElementById('gTitle').textContent = '🎮 ' + title;
-      document.getElementById('gFrame').src = url + '?v=' + Date.now();
-      document.getElementById('player').style.display = 'flex';
-    }
-    function closeGame() {
-      document.getElementById('gFrame').src = '';
-      document.getElementById('player').style.display = 'none';
-    }
-  </script>
-</body>
-</html>
+  <div id="gameWrap">
+    <button id="backBtn" onclick="location.reload()">◀ 로비로</button>
+    <canvas id="c" width="1280" height="720"></canvas>
+  </div>
+<script>
+const c=document.getElementById("c"),x=c.getContext("2d"),VW=1280,VH=720,H=Math.hypot,A=Math.atan2,C=Math.cos,S=Math.sin;
+const AC=new(window.AudioContext||window.webkitAudioContext)();
+function sfx(f,t,d,v){try{if(AC.state==="suspended")AC.resume();let o=AC.createOscillator(),g=AC.createGain();o.type=t||"sine";o.frequency.setValueAtTime(f,AC.currentTime);o.frequency.exponentialRampToValueAtTime(f*.35,AC.currentTime+d);g.gain.setValueAtTime(v||.07,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d);}catch(e){}}
+function launch(mode){
+  document.getElementById("lobby").style.display="none";
+  document.getElementById("gameWrap").style.display="block";
+  if(mode===1)initLol();else initMaple();
+}
