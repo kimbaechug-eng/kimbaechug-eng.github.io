@@ -80,7 +80,7 @@
   <script>
     function play(title, url) {
       document.getElementById('gTitle').textContent = '🎮 ' + title;
-      document.getElementById('gFrame').src = url;
+      document.getElementById('gFrame').src = url + '?v=' + Date.now();
       document.getElementById('player').style.display = 'flex';
     }
     function closeGame() {
